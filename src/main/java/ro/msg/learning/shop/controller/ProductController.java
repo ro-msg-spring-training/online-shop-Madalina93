@@ -1,47 +1,50 @@
 package ro.msg.learning.shop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.exceptions.ResourceNotFoundException;
 import ro.msg.learning.shop.repositories.ProductRepository;
+import ro.msg.learning.shop.service.ProductService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
 public class ProductController {
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductService productService;
 
-    //get all the products available in stock
-    @GetMapping("/products")
-    public List<Product> getAll() {
-        return productRepository.findAll();
+    @RequestMapping(value = "/products")
+    public List<Product> getProducts() {
+        return productService.getProducts();
     }
 
     @PostMapping("/product")
     public Product createProduct(@Valid @RequestBody Product product) {
-        return productRepository.save(product);
+        return productService.createProduct(product);
     }
 
     @GetMapping("/product/{id}")
-    public Product getProductById(@PathVariable(value = "id") Integer productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product"));
+    public Optional<Product> getProductById(@PathVariable(value = "id") Integer productId) {
+        return productService.getProductById(productId);
     }
 
     // Delete a Product
-    @DeleteMapping("/products/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable(value = "id") Integer productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product"));
+    @DeleteMapping("/product/{id}")
+    public void deleteProduct(@PathVariable(value = "id") Integer productId) {
+        productService.deleteProduct(productId);
+    }
 
-        productRepository.delete(product);
+    //Update an existing product
+    @PutMapping("/product/{id}")
+    public Product updateProduct(@PathVariable(value = "id") @Valid @RequestBody Product productDetails, Integer productId){
+        return productService.updateProduct(productDetails, productId);
 
-        return ResponseEntity.ok().build();
     }
 }

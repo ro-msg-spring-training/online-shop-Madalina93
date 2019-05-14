@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ro.msg.learning.shop.entities.Supplier;
-import ro.msg.learning.shop.repositories.SupplierRepository;
+import ro.msg.learning.shop.service.SupplierService;
 
 import javax.validation.Valid;
 
@@ -15,10 +15,10 @@ import javax.validation.Valid;
 public class SupplierController {
 
     @Autowired
-    SupplierRepository supplierRepository;
+    private SupplierService supplierService;
 
     @PostMapping("/supplier")
     public Supplier createProduct(@Valid @RequestBody Supplier supplier) {
-        return supplierRepository.save(supplier);
+        return supplierService.createProduct(supplier);
     }
 }

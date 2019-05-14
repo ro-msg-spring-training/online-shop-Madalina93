@@ -20,8 +20,8 @@ public class Product {
     @JoinColumn(name="PC_ID")
     private ProductCategory productCategory;
     @ManyToMany
-    //@JoinTable(name ="PRO_SUPP", joinColumns = @JoinColumn(name = "PRO_ID"),
-        //    inverseJoinColumns = @JoinColumn(name="SUPP_ID"))
+    @JoinTable(name ="PRO_SUPP", joinColumns = @JoinColumn(name = "PRO_ID"),
+            inverseJoinColumns = @JoinColumn(name="SUPP_ID"))
     private Collection<Supplier> suppliers;
 
 }
